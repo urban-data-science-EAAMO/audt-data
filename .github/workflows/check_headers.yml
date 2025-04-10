@@ -1,0 +1,52 @@
+name: Check Code File Headers
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**/*.py'
+      - '**/*.sh'
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.R'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '**/*.py'
+      - '**/*.sh'
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.R'
+
+jobs:
+  check-headers:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Full git history for author information
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install gitpython
+    
+    - name: Run header check script
+      run: |
+        # Find all supported code files and run header check
+        find . -type f \( -name "*.py" -o -name "*.sh" -o -name "*.js" -o -name "*.ts" -o -name "*.R" \) -not -path "*/\.*" | xargs python audt_data/utils/check_headers.py
+    
+    - name: Commit changes if headers were added
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add -A
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Add standard headers to code files" && git push)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
