@@ -42,11 +42,25 @@ jobs:
         # Find all supported code files and run header check
         find . -type f \( -name "*.py" -o -name "*.sh" -o -name "*.js" -o -name "*.ts" -o -name "*.R" \) -not -path "*/\.*" | xargs python audt_data/utils/check_headers.py
     
-    - name: Commit changes if headers were added
-      run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add -A
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Add standard headers to code files" && git push)
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Pull Request if headers were added
+      if: success()
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "Add standard headers to code files"
+        title: "Add standard headers to code files"
+        body: |
+          This PR automatically adds standardized headers to code files following the repository guidelines.
+          
+          The headers include:
+          - Project name: augmented urban data triangulation (audt)
+          - Repository name
+          - File title
+          - Description
+          - Author information
+          
+          Please review the changes to ensure headers are correctly formatted.
+        branch: auto-headers
+        branch-suffix: timestamp
+        delete-branch: true
+        base: ${{ github.ref_name }}
