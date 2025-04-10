@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# exclude ALL files named 'key.txt'
+key.txt
+
+# exclude ANY directory named 'raw' 
+raw/
+preprocessed/
