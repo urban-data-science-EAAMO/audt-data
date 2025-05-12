@@ -44,7 +44,7 @@ jobs:
       id: header_check
       run: |
         # Find all supported code files and run header check
-        python d03_src/utils/check_headers.py --exclude README.md
+        python audt_data/d03_src/utils/check_headers.py --exclude README.md
         # Count modified files
         MODIFIED=$(git diff --name-only | wc -l)
         echo "modified_files=$MODIFIED" >> $GITHUB_OUTPUT
