@@ -1,3 +1,11 @@
+"""
+[augmented urban data triangulation (audt)]
+[audt-data]
+[Check Headers]
+[Script for check headers]
+[Matt Franchi]
+"""
+
 #!/usr/bin/env python3
 """
 Script to automatically check for and add headers to code files.

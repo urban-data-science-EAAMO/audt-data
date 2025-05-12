@@ -1,3 +1,10 @@
+#!/bin/bash
+# [augmented urban data triangulation (audt)]
+# [audt-data]
+# [Nyc-demo]
+# [Shell script for nyc-demo]
+# [Matt Franchi]
+
 mkdir -p raw
 # load API_KEY from key.text
 # key.text should only contain your key, and be in the same directory as this script. 

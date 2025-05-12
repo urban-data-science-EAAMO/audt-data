@@ -1,3 +1,11 @@
+"""
+[augmented urban data triangulation (audt)]
+[audt-data]
+[Batch Pp]
+[Module with functions for batch pp]
+[Matt Franchi]
+"""
+
 import os
 import json
 import pandas as pd
