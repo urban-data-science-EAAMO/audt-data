@@ -1,3 +1,10 @@
+#!/bin/bash
+# [augmented urban data triangulation (audt)]
+# [audt-data]
+# [Pull]
+# [Shell script for pull]
+# [Matt Franchi]
+
 # Get repository root
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 SAVE_DIR="${REPO_ROOT}/audt_data/d01_data/geo/nyc"

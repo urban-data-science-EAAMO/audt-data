@@ -1,3 +1,11 @@
+"""
+[augmented urban data triangulation (audt)]
+[audt-data]
+[Pp Topology]
+[Module with functions for pp topology]
+[Matt Franchi]
+"""
+
 import os 
 import rasterio
 from rasterio.enums import Resampling
