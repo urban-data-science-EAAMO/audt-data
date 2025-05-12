@@ -15,6 +15,7 @@ import re
 import sys
 import datetime
 import git
+import argparse
 from pathlib import Path
 
 # Define the expected header format based on README guidelines
@@ -228,9 +229,18 @@ def add_header(file_path, repo):
     return True  # Header was added
 
 def main():
-    # If arguments are provided, use them as file paths to check
-    if len(sys.argv) > 1:
-        file_paths = sys.argv[1:]
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Check and add headers to code files')
+    parser.add_argument('--exclude', nargs='+', help='Files to exclude from processing')
+    args, unknown_args = parser.parse_known_args()
+    
+    excluded_files = set(args.exclude if args.exclude else [])
+    # Always exclude README.md
+    excluded_files.add('README.md')
+    
+    # If additional arguments are provided, use them as file paths to check
+    if unknown_args:
+        file_paths = unknown_args
     else:
         # Find all supported code files in the repository
         file_paths = []
@@ -239,7 +249,7 @@ def main():
             if '.git' in root or '.github' in root:
                 continue
             for file in files:
-                if file.endswith(supported_extensions):
+                if file.endswith(supported_extensions) and file not in excluded_files:
                     file_paths.append(os.path.join(root, file))
     
     # Try to initialize git repo from current directory or by searching upwards
@@ -256,6 +266,10 @@ def main():
     # Process each file
     headers_added = 0
     for file_path in file_paths:
+        # Skip excluded files
+        if os.path.basename(file_path) in excluded_files:
+            continue
+            
         if add_header(file_path, repo):
             print(f"Added header to {file_path}")
             headers_added += 1
