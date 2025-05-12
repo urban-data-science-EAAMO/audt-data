@@ -1,3 +1,9 @@
+# [augmented urban data triangulation (audt)]
+# [audt-data]
+# [Readme]
+# [Code related to README]
+# [Matt Franchi]
+
 # AUDT Data
 
 A Python package for processing and analyzing ACS data.

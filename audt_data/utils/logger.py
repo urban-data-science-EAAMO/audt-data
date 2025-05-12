@@ -1,3 +1,11 @@
+"""
+[augmented urban data triangulation (audt)]
+[audt-data]
+[Logger]
+[Module containing ColorfulFormatter, returned classes for logger]
+[Matt Franchi]
+"""
+
 import logging
 import os
 import inspect

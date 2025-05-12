@@ -1,3 +1,11 @@
+"""
+[augmented urban data triangulation (audt)]
+[audt-data]
+[Helpers]
+[Module with functions for helpers]
+[Matt Franchi]
+"""
+
 import pandas as pd 
 from audt_data.utils.logger import setup_logger 
 
