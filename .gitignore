@@ -176,6 +176,4 @@ cython_debug/
 # exclude ALL files named 'key.txt'
 key.txt
 
-# exclude ANY directory named 'raw' 
-raw/
-preprocessed/
+d01_data/
