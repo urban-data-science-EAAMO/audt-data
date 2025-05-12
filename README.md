@@ -1,10 +1,6 @@
 # [augmented urban data triangulation (audt)]
-# [audt-data]
-# [Readme]
-# [Code related to README]
-# [Matt Franchi]
-
 # AUDT Data
+[![Check Code File Headers](https://github.com/urban-data-science-EAAMO/audt-data/actions/workflows/check_headers.yml/badge.svg)](https://github.com/urban-data-science-EAAMO/audt-data/actions/workflows/check_headers.yml)
 
 A Python package for processing and analyzing ACS data.
 
