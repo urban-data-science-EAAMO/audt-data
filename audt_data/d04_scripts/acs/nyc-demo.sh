@@ -9,7 +9,7 @@
 # key.text should only contain your key, and be in the same directory as this script. 
 API_KEY=$(cat key.txt)
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-SAVE_DIR="${REPO_ROOT}/d01_data/acs"
+SAVE_DIR="${REPO_ROOT}/audt_data/d01_data/acs/raw"
 
 # Create the save directory if it doesn't exist
 mkdir -p "${SAVE_DIR}"

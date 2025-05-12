@@ -7,7 +7,7 @@
 """
 
 import pandas as pd 
-from audt_data.utils.logger import setup_logger 
+from audt_data.d03_src.utils.logger import setup_logger 
 
 logger = setup_logger("acs.helpers")
 
@@ -55,7 +55,16 @@ def parse_md(md):
     return vars_df
 
 def parse_acs(acs, cols: dict):
-
+    """
+    Parse ACS data with column mapping.
+    
+    Parameters:
+    acs (DataFrame): Raw ACS data
+    cols (dict): Mapping of original column names to descriptive names
+    
+    Returns:
+    DataFrame: Processed ACS data with appropriate data types
+    """
     acs.columns = acs.iloc[0]
     acs = acs[1:]
     acs['tract_id'] = acs['GEO_ID'].str.split('US', expand=True)[1]
@@ -64,10 +73,26 @@ def parse_acs(acs, cols: dict):
     acs = acs[list(cols.keys())]
     acs.columns = acs.columns.map(lambda x: cols[x])
 
-    acs = acs.astype(int)
+    # Convert columns to numeric instead of forcing to integers
+    # This handles missing values and non-integer values better
+    numeric_cols = acs.columns
+    for col in numeric_cols:
+        try:
+            acs[col] = pd.to_numeric(acs[col], errors='coerce')
+        except Exception as e:
+            logger.warning(f"Could not convert column {col} to numeric: {e}")
+    
+    # Fill NA values created by numeric conversion
+    acs = acs.fillna(0)
+    
+    # Try to convert to integer where possible (without losing data)
+    for col in acs.columns:
+        if acs[col].dtype.kind == 'f':  # If float
+            # Check if all values are actually integers
+            if (acs[col] % 1 == 0).all():
+                acs[col] = acs[col].astype(int)
+    
     return acs
-
-
 
 def get_acs_data(year, identifier, cols_to_keep):
     raw = pd.read_json(f"data/acs{year}_{identifier}.json")

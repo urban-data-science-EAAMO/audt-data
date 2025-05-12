@@ -14,8 +14,9 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from audt_data.utils.logger import setup_logger
-from audt_data.acs.helpers import parse_md, parse_acs
+from audt_data.d03_src.utils.logger import setup_logger
+from audt_data.d03_src.utils.repo import get_repo_root
+from audt_data.d03_src.pp.acs.helpers import parse_md, parse_acs
 # Set up the logger
 logger = setup_logger("acs.batch_processor")
 
@@ -134,15 +135,32 @@ def process_acs_file(input_file, output_dir):
                 
                 # Parse ACS data
                 df = pd.read_json(input_file)
-                parsed_data = parse_acs(df, col_mapping)
                 
-                # Add year column
-                parsed_data['year'] = year
+                # Remove data type conversion here - we'll handle it better in parse_acs
+                # The improved parse_acs will handle data types appropriately
                 
-                # Save processed data
-                output_path = os.path.join(output_dir, f"acs{year}_{identifier}_processed.csv")
-                parsed_data.to_csv(output_path)
-                logger.success(f"Saved processed data to {output_path}")
+                # Process the data with the column mapping
+                try:
+                    parsed_data = parse_acs(df, col_mapping)
+                    
+                    # Add year column
+                    parsed_data.loc[:, 'year'] = year
+                    
+                    # Save processed data
+                    output_path = os.path.join(output_dir, f"acs{year}_{identifier}_processed.csv")
+                    parsed_data.to_csv(output_path)
+                    
+                    # Log data type information for debugging
+                    dtypes_msg = "Data types in processed file:\n" + "\n".join([f"{col}: {dtype}" for col, dtype in parsed_data.dtypes.items()])
+                    logger.debug(dtypes_msg)
+                    
+                    logger.success(f"Saved processed data to {output_path}")
+                except Exception as e:
+                    # Log detailed error information
+                    logger.error(f"Error processing data file: {str(e)}")
+                    import traceback
+                    logger.error(f"Traceback: {traceback.format_exc()}")
+                    return False
             except Exception as e:
                 logger.error(f"Error processing data file: {str(e)}")
                 return False
@@ -168,8 +186,9 @@ def batch_process_acs():
         return
     
     # Update paths to match repository structure
-    raw_dir = Path(repo_root) / "d01_data" / "acs"
-    preprocessed_dir = raw_dir / "preprocessed"
+    raw_dir = Path(repo_root) / "audt_data" / "d01_data" / "acs" / "raw"
+    # go up a dir and go to preprocessed 
+    preprocessed_dir = Path(raw_dir).parent / "preprocessed"
     
     # Create preprocessed directory if it doesn't exist
     os.makedirs(preprocessed_dir, exist_ok=True)

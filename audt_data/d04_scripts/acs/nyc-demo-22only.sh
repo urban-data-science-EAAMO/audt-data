@@ -9,7 +9,7 @@
 # key.text should only contain your key, and be in the same directory as this script. 
 API_KEY=$(cat key.txt)
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-SAVE_DIR="${REPO_ROOT}/d01_data/acs"
+SAVE_DIR="${REPO_ROOT}/audt_data/d01_data/acs/raw"
 
 # ACS DP05 - NYC 
 acs_dp05_md='https://api.census.gov/data/2022/acs/acs5/profile/groups/DP05.json'
