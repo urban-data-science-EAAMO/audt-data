@@ -21,6 +21,9 @@ on:
 jobs:
   check-headers:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
     - uses: actions/checkout@v3
@@ -38,12 +41,16 @@ jobs:
         pip install gitpython
     
     - name: Run header check script
+      id: header_check
       run: |
         # Find all supported code files and run header check
-        find . -type f \( -name "*.py" -o -name "*.sh" -o -name "*.js" -o -name "*.ts" -o -name "*.R" \) -not -path "*/\.*" | xargs python audt_data/utils/check_headers.py
+        python audt_data/utils/check_headers.py
+        # Count modified files
+        MODIFIED=$(git diff --name-only | wc -l)
+        echo "modified_files=$MODIFIED" >> $GITHUB_OUTPUT
     
     - name: Create Pull Request if headers were added
-      if: success()
+      if: steps.header_check.outputs.modified_files != '0'
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
